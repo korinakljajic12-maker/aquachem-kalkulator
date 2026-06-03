@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AquaHeat | Kalkulator Dizalice Topline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="kalkulator.css" />
+</head>
+<body>
+
+
+<!-- ── MAIN ── -->
+<div class="page-header-wrap">
+    <div class="page-header">
+      <h1>Kalkulator Dizalice Topline</h1>
+      <p>Unesite parametre vašeg bazena kako biste pronašli optimalnu dizalicu topline.</p>
+    </div>
+  </div>
+  <main>
+  <!-- ── LEFT COLUMN ── -->
+  <div class="left-col">
+    <div class="card">
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- Ulazni podaci -->
+        <section class="section">
+          <h2>Ulazni podaci</h2>
+          <div class="field-grid cols-2">
+            <div class="field">
+              <label for="oblikBazena">Oblik bazena</label>
+              <div class="select-wrap">
+                <select id="oblikBazena">
+                  <option value="regular">Pravilni</option>
+                  <option value="irregular">Nepravilni</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="tipBazena">Pozicija bazena</label>
+              <div class="select-wrap">
+                <select id="tipBazena">
+                  <option value="closed">Zatvoreni</option>
+                  <option value="open" selected>Otvoreni</option>
+                  <option value="windy">Otvoreni u vjetrovitom području</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- Dimenzije bazena -->
+        <section class="section">
+          <h2>Dimenzije bazena</h2>
+
+          <!-- Regular fields -->
+          <div class="field-grid cols-3" id="regularFields">
+            <div class="field">
+              <label for="sirina">Širina bazena [m]</label>
+              <input id="sirina" type="number" step="0.01" value="4" />
+            </div>
+            <div class="field">
+              <label for="duzina">Dužina bazena [m]</label>
+              <input id="duzina" type="number" step="0.01" value="8" />
+            </div>
+            <div class="field">
+              <label for="dubinaRegular">Dubina bazena [m]</label>
+              <input id="dubinaRegular" type="number" step="0.01" value="1.5" />
+            </div>
+          </div>
+
+          <!-- Irregular fields -->
+          <div class="field-grid cols-2 hidden" id="irregularFields">
+            <div class="field">
+              <label for="povrsinaIrregular">Površina bazena [m²]</label>
+              <input id="povrsinaIrregular" type="number" step="0.01" value="32" />
+            </div>
+            <div class="field">
+              <label for="dubinaIrregular">Dubina bazena [m]</label>
+              <input id="dubinaIrregular" type="number" step="0.01" value="1.5" />
+            </div>
+          </div>
+
+          <div class="volume-row">
+            <span class="label">Izračunati volumen</span>
+            <span class="value" id="volumeDisplay">48,0 m³</span>
+          </div>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- Sustav i temperatura -->
+        <section class="section">
+          <h2>Sustav i temperatura</h2>
+          <div class="field-grid cols-2">
+            <div class="field">
+              <label for="sustavBazena">Tip sustava</label>
+              <div class="select-wrap">
+                <select id="sustavBazena">
+                  <option value="skimmer">Skimmer</option>
+                  <option value="overflow">Preljevni kanal s kompenzacijom</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="temperaturaVode">Željena temperatura vode [°C]</label>
+              <input id="temperaturaVode" type="number" step="0.1" value="28" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="lokacijaBazena">Lokacija bazena</label>
+            <input id="lokacijaBazena" type="text" placeholder="npr. Ivanić Grad" value="Ivanić Grad" />
+            <span class="hint">Podržava i upis bez crtice, npr. Ivanić Grad / Ivanić-Grad.</span>
+          </div>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- Uvjeti korištenja -->
+        <section class="section">
+          <h2>Uvjeti korištenja</h2>
+          <div class="field-grid cols-2">
+            <div class="field">
+              <label for="periodKoristenja">Period korištenja bazena</label>
+              <div class="select-wrap">
+                <select id="periodKoristenja">
+                  <option value="shoulder">Rano proljeće i kasna jesen</option>
+                  <option value="summer">Ljetni period</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="pokrivkaBazena">Pokrivka bazena</label>
+              <div class="select-wrap">
+                <select id="pokrivkaBazena">
+                  <option value="no">Ne</option>
+                  <option value="yes">Da</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field-grid cols-2">
+            <div class="field">
+              <label for="regionBazena">Regija bazena</label>
+              <div class="select-wrap">
+                <select id="regionBazena" onchange="updateSoilTempFromRegion()">
+                  <option value="">— Odaberi regiju —</option>
+                  <option value="zagreb">Kontinentalna Hrvatska (Zagreb i okolica)</option>
+                  <option value="osijek">Slavonija i Baranja (Osijek i okolica)</option>
+                  <option value="delnice">Gorska Hrvatska — Sjever (Delnice i okolica)</option>
+                  <option value="gospic">Gorska Hrvatska — Jug (Gospić i okolica)</option>
+                  <option value="rijeka">Primorje (Rijeka i okolica)</option>
+                  <option value="pula">Istra (Pula i okolica)</option>
+                  <option value="zadar">Dalmacija — Sjeverna (Zadar i okolica)</option>
+                  <option value="split">Dalmacija — Srednja (Split i okolica)</option>
+                  <option value="dubrovnik">Dalmacija — Južna (Dubrovnik i okolica)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="customVrijemeZagrijavanja">Unos vremena početnog zagrijavanja [h]</label>
+              <div class="select-wrap">
+                <select id="customVrijemeZagrijavanja">
+                  <option value="48" selected>48 h</option>
+                  <option value="72">72 h</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field-grid cols-2">
+            <div class="field">
+              <label for="temperaturaTla">Temperatura tla [°C]</label>
+              <input id="temperaturaTla" type="number" step="0.1" value="12" readonly />
+              <span class="hint">Automatski se postavlja prema odabranoj regiji i periodu korištenja.</span>
+            </div>
+            <div class="field">
+              <label for="izvorTemperatureTla">Izvor temperature tla</label>
+              <input id="izvorTemperatureTla" type="text" value="Nije odabrana regija" readonly />
+            </div>
+          </div>
+
+          <div class="info-box">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/>
+            </svg>
+            <span id="infoIzvor">Izvor temperature tla: Ručno/fallback 12 °C</span>
+          </div>
+        </section>
+
+        <!-- Hidden details start polja -->
+        <div class="hidden" id="detailsStartPolja">
+          <div class="field-grid cols-2" style="margin-top:8px;">
+            <div class="field">
+              <label for="autoVrijemeZagrijavanja">Vrijeme početnog zagrijavanja pri snazi održavanja [h]</label>
+              <input id="autoVrijemeZagrijavanja" type="number" step="0.1" readonly />
+            </div>
+            <div class="field">
+              <label for="izracunataStartSnaga">Snaga za početno zagrijavanje prema unesenom vremenu [kW]</label>
+              <input id="izracunataStartSnaga" type="number" step="0.1" readonly />
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button class="btn-calc" onclick="izracunaj()">Izračunaj</button>
+          <div class="secondary-actions">
+
+            <button class="btn-secondary-action" onclick="ocistiSve()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9a9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              Očisti
+            </button>
+            <button class="btn-secondary-action" onclick="window.print()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8l6 6v12a2 2 0 0 1-2 2z"/><path d="M14 2v6h6M10 9H8m8 4H8m8 4H8"/></svg>
+              Ispis / PDF
+            </button>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-toggle" onclick="toggleDetalji()">Detalji</button>
+            <span class="badge" id="statusBadge">Spremno</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Hidden: Napomena / Formula -->
+    <div class="hidden" id="detailsNapomena">
+      <div class="card">
+        <div class="section">
+          <h2>Napomena o proračunu</h2>
+          <div class="info-box" style="align-items:flex-start;flex-direction:column;gap:12px;">
+            <strong>Periodi korištenja</strong>
+            <span>Rano proljeće i kasna jesen: prosjek tla iz dva intervala prošle godine <strong>01.03.–10.03.</strong> i <strong>15.09.–15.11.</strong>.<br/>Ljetni period: prosjek tla iz intervala <strong>01.06.–31.08.</strong>.</span>
+          </div>
+          <div class="formula-box" id="formulaBox">Formula će biti prikazana nakon izračuna.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── RIGHT COLUMN ── -->
+  <div class="right-col">
+
+    <!-- Results dark card -->
+    <div class="dark-card">
+      <div class="results-label">Rezultati izračuna</div>
+
+      <div class="result-row">
+        <span class="rk">Početno zagrijavanje</span>
+        <span class="rv" id="mStart">–</span>
+      </div>
+      <div class="result-row">
+        <span class="rk">Ukupna snaga održavanja</span>
+        <span class="rv" id="mNormal">–</span>
+      </div>
+
+      <div class="big-power">
+        <div class="power-label">Potrebna minimalna snaga</div>
+        <div class="power-value">
+          <span class="power-number" id="mRequired">–</span>
+          <span class="power-unit">kW</span>
+        </div>
+      </div>
+
+      <div class="recommendation-section">
+        <div class="rec-row">
+          <span>Preporučeni model</span>
+          <span class="rec-val" id="mModel">–</span>
+        </div>
+        <div class="rec-row">
+          <span>Preporuka</span>
+          <span class="rec-val" id="preporuka" style="font-size:12px;text-align:right;max-width:55%;">–</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Catalog card -->
+    <div class="card catalog-card">
+      <div class="catalog-header">
+        <h3>Aquachem katalog modela</h3>
+        <span class="catalog-badge">Asortiman</span>
+      </div>
+      <div class="catalog-cols">
+        <span>Model</span>
+        <span>Naziv</span>
+        <span style="text-align:right">Snaga</span>
+        <span style="text-align:right">Status</span>
+      </div>
+      <div id="catalogBody"></div>
+      <div class="catalog-actions">
+        <button class="btn-catalog-action" onclick="toggleDetalji()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+          Detalji
+        </button>
+      </div>
+    </div>
+
+    <!-- Hidden: Detaljna tablica -->
+    <div class="hidden" id="detailsTablica">
+      <div class="card">
+        <h2 style="font-size:15px;font-weight:600;margin-bottom:16px;">Detaljna tablica izračuna</h2>
+        <div class="table-wrap">
+          <table id="rezultatTablica">
+            <thead><tr><th>Stavka</th><th>Vrijednost</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script src="kalkulator.js"></script>
+  <footer class="disclaimer">
+    Prikazani rezultat služi kao informativna preporuka i može odstupati ovisno o stvarnim uvjetima korištenja. Prije konačnog odabira i kupnje preporučujemo savjetovanje s našim stručnim timom.
+  </footer>
+</body>
+</html>
